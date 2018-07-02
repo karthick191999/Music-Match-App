@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@drawable/my_shape_grey">
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="0dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist Name"
+            android:textSize="15sp"/>
+    <TextView
+        android:textSize="15sp"
+        android:id="@+id/favartName"
+        android:textStyle="italic"
+        android:layout_marginLeft="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+</LinearLayout>
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="0dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist Rating"
+            android:textSize="15sp"/>
+    <TextView
+        android:id="@+id/favartRating"
+        android:textStyle="italic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+
+        android:text="TextView" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="0dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist Genre"
+            android:textSize="15sp"/>
+    <TextView
+        android:id="@+id/favartGenre"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="58dp"
+        android:textStyle="italic"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+</LinearLayout>
+    </LinearLayout>

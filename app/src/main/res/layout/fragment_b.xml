@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.karthik.spider4.ArtistsActivity">
+
+    <ListView
+        android:id="@+id/topArtistList"
+        android:background="@drawable/my_shape_b"
+        android:dividerHeight="10dp"
+        android:divider="#FF7683"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
