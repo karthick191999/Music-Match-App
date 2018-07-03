@@ -17,9 +17,8 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:layout_marginLeft="30dp"
-        android:textColor="#76FFF2"
         android:textSize="15sp"
-        android:textStyle="bold|italic"
+        android:textStyle="italic"
 
         />
 

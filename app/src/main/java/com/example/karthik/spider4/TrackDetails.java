@@ -61,6 +61,9 @@ public class TrackDetails extends AppCompatActivity {
                 //String name = trackListResponse.getMessage().getBody().getTracksGet().getTrack().getTrackName();
                 Log.d("Checking parsing", name);
                 title.setText(name);
+                if (genre=="")
+                    genretrack.setText("Genre unavailable");
+                else
                 genretrack.setText(genre);
 
                 //Log.d("CHECKING GENRE",genre);

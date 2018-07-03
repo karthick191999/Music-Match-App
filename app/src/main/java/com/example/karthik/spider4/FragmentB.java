@@ -61,7 +61,7 @@ public class FragmentB extends Fragment {
 
             @Override
             public void onFailure(Call<ArtistListResponse> call, Throwable t) {
-
+                Toast.makeText(getActivity(), t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,17 +96,26 @@ public class FragmentB extends Fragment {
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             View row = convertView;
+            final ViewArtist holder;
             final int[] flag = {0};
             final ArtistList artistList = getItem(position);
             if (row == null) {
+                holder = new ViewArtist();
                 LayoutInflater layoutInflater = getActivity().getLayoutInflater();
                 row = layoutInflater.inflate(R.layout.topartist_singlerow, parent, false);
-            }
-            final ImageView imageView = (ImageView) row.findViewById(R.id.favouriteA);
+                holder.name = (TextView) row.findViewById(R.id.individual_artist);
+                holder.star = (ImageView) row.findViewById(R.id.favouriteA);
+                row.setTag(holder);
+
+
+            } else
+                holder = (ViewArtist) row.getTag();
+
+
             if (fav[position]) {
-                imageView.setImageResource(R.drawable.favourite_yes);
+                holder.star.setImageResource(R.drawable.favourite_yes);
             } else {
-                imageView.setImageResource(R.drawable.favourite_no);
+                holder.star.setImageResource(R.drawable.favourite_no);
             }
 
             String pos = getposition();
@@ -115,21 +124,21 @@ public class FragmentB extends Fragment {
             for (int i = 0; i < pos.length(); i++) {
                 while (savePosition.hasMoreTokens()) {
                     if (position == Integer.parseInt(savePosition.nextToken())) {
-                        imageView.setImageResource(R.drawable.favourite_yes);
+                        holder.star.setImageResource(R.drawable.favourite_yes);
                         fav[position] = true;
                     }
                 }
             }
 
 
-            imageView.setOnClickListener(new View.OnClickListener() {
+            holder.star.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fav[position]) {
-                        imageView.setImageResource(R.drawable.favourite_no);
+                        holder.star.setImageResource(R.drawable.favourite_no);
                         fav[position] = false;
                     } else {
-                        imageView.setImageResource(R.drawable.favourite_yes);
+                        holder.star.setImageResource(R.drawable.favourite_yes);
 
                         fav[position] = true;
                     }
@@ -160,26 +169,29 @@ public class FragmentB extends Fragment {
                         genre.append("Genre unavailable");
                     }
                     if (flag[0] == 1) {
+                        holder.star.setImageResource(R.drawable.favourite_yes);
                         Toast.makeText(getActivity(), "ALready exist", Toast.LENGTH_LONG).show();
-                        //  AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                        //dialog.setMessage("Already exist");
-                        //dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        //@Override
-                        //  public void onClick(DialogInterface dialog, int which) {store(position,1);
-                        //  Log.d("Checking name", tracklist.getTrack().getTrackName());
-                        //  databaseHelper.deleteData(tracklist.getTrack().getTrackName());
-                        //int del = position;
-                        // }
-                        //});
-                        //dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        //@Override
-                        //  public void onClick(DialogInterface dialog, int which) {
+                        //The same problem as the previous fragment:(
+                        /*  AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                        dialog.setMessage("Already exist");
+                        dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                          public void onClick(DialogInterface dialog, int which) {store(position,1);
+                          Log.d("Checking name", tracklist.getTrack().getTrackName());
+                          databaseHelper.deleteData(tracklist.getTrack().getTrackName());
+                        int del = position;
+                         }
+                        });
+                        dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                          public void onClick(DialogInterface dialog, int which) {
 
-                        //        }
-                        //});
-                        //  dialog.show();
+                                }
+                        });
+                          dialog.show();*/
 
-                    } else {
+                    }
+                    else {
                         databaseArtist.addData(artistList.getArtist().getArtistName(), String.valueOf(artistList.getArtist().getArtistRating()), genre.toString());
                         store(position);
 
@@ -187,9 +199,9 @@ public class FragmentB extends Fragment {
                 }
             });
 
-            TextView artisttext = (TextView) row.findViewById(R.id.individual_artist);
+
             String artistName = artistList.getArtist().getArtistName();
-            artisttext.setText(artistName);
+            holder.name.setText(artistName);
             return row;
         }
     }
@@ -199,18 +211,18 @@ public class FragmentB extends Fragment {
 
 
         str.append(getposition());
-        //    if (flag == 1) {
-        // String string = str.toString();
-        //   char a[] = string.toCharArray();
-        //     for (int i = 0; i < a.length; i++)
-        //if (a[i] == position || a[i] == ',')
-        //      a[i] = 'e';
-        //string = String.valueOf(a);
-        //Log.d("Checking string",string);
-        //  str.append(string);
-        //    Log.d("Checking yra", String.valueOf(str));
+        /*    if (flag == 1) {
+         String string = str.toString();
+           char a[] = string.toCharArray();
+             for (int i = 0; i < a.length; i++)
+        if (a[i] == position || a[i] == ',')
+              a[i] = 'e';
+        string = String.valueOf(a);
+        Log.d("Checking string",string);
+          str.append(string);
+            Log.d("Checking yra", String.valueOf(str));
 
-        //  }
+         }*/
         str.append(position + ",");
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Save file", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

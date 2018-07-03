@@ -42,6 +42,7 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,11 +58,17 @@ public class MainActivity extends AppCompatActivity {
     EditText searchText;
 
     ImageButton imageButton;
-
+    boolean trackBoolean;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      //  ToggleButton toggleButton  = (ToggleButton) findViewById(R.id.toggle);
+        //if (toggleButton.isChecked()){
+        //trackBoolean   = true;
+        //}
+        //else
+          //  trackBoolean = false;
         imageButton = (ImageButton) findViewById(R.id.imageButton);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -78,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                     Bundle bundle = new Bundle();
+                 //   bundle.putBoolean("Check",trackBoolean);
                     bundle.putString("Searchtext", name);
                     intent.putExtras(bundle);
                     startActivity(intent);

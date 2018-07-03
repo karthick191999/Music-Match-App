@@ -4,27 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.karthik.spider4.SearchActivity"
-    android:orientation="vertical">
-<TextView
-    android:layout_width="match_parent"
-    android:id="@+id/searchtext"
-    android:layout_height="wrap_content"
-    android:textSize="20sp"
-    android:layout_margin="20dp"/>
+    android:orientation="vertical"
+    tools:context="com.example.karthik.spider4.SearchActivity">
+
+    <TextView
+        android:id="@+id/searchtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Search Results..."
+        android:textColor="#314159"
+        android:textSize="20sp" />
+
     <ListView
+        android:id="@+id/searchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/searchList"
-        >
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#FFF68F"
 
+        android:dividerHeight="1dp">
 
 
     </ListView>
-
-
-
-
 
 
 </LinearLayout>

@@ -28,12 +28,13 @@ public interface APIinterface {
     @GET("album.get")
     Call<GenreListResponse> getTrackdetails(@Query("apikey") String apiKey, @Query("album_id") int albumId);
 
-    // @GET("track.get")
-    //Call
+//    @GET("track.search")
+  //  Call<TrackListResponse> getTrackbyTrack(@Query("apikey") String apiKey, @Query("q_track") String name, @Query("page_size") int page_size, @Query("page") int page, @Query("s_track_rating") String track_rating);
+
     @GET("track.search")
-    Call<TrackListResponse> getTrack(@Query("apikey") String apiKey, @Query("q_artist") String name, @Query("page_size") int page_size, @Query("page") int page, @Query("s_track_rating") String track_rating);
+    Call<TrackListResponse> getTrack(@Query("apikey") String apiKey, @Query("q") String name, @Query("page_size") int page_size, @Query("page") int page, @Query("s_track_rating") String track_rating);
 
     @GET("artist.get")
-    Call<Artistget> getArtist(@Query("apikey")String apiKey,@Query("artist_id") int artistid);
+    Call<Artistget> getArtist(@Query("apikey") String apiKey, @Query("artist_id") int artistid);
 
 }
