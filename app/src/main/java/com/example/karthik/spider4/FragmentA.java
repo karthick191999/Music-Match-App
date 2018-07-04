@@ -112,6 +112,7 @@ public class FragmentA extends android.support.v4.app.Fragment {
 
         private boolean[] favorites = new boolean[15];
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @NonNull
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -160,9 +161,11 @@ public class FragmentA extends android.support.v4.app.Fragment {
             } else {
                 holder.star.setImageResource(R.drawable.favourite_no);
             }
-
-
-            String pos = getposition();
+            if (databaseHelper.staring(tracklist.getTrack().getTrackName())) {
+                holder.star.setImageResource(R.drawable.favourite_yes);
+                favorites[position] = true;
+            }
+         /*   String pos = getposition();
             //  Log.d("SHARED", pos);
             StringTokenizer savePosition = new StringTokenizer(pos, ",");
             for (int i = 0; i < pos.length(); i++) {
@@ -172,8 +175,8 @@ public class FragmentA extends android.support.v4.app.Fragment {
                         favorites[position] = true;
                     }
                 }
-            }
-            holder.star.setOnClickListener(new View.OnClickListener() {
+            }*/
+            holder.star.setOnClickListener(new View.OnClickListener() {Tracklist itrack = getItem(position);
                 @Override
                 public void onClick(View v) {
                     if (favorites[position]) {
@@ -184,8 +187,11 @@ public class FragmentA extends android.support.v4.app.Fragment {
 
                         favorites[position] = true;
                     }
+                    if (databaseHelper.staring(itrack.getTrack().getTrackName())) {
+                        flag[0] = 1;
 
-                    String pos = getposition();
+                    }
+                 /*   String pos = getposition();
 
                     StringTokenizer savePosition = new StringTokenizer(pos, ",");
                     for (int i = 0; i < pos.length(); i++) {
@@ -197,12 +203,13 @@ public class FragmentA extends android.support.v4.app.Fragment {
                             }
                         }
                     }
+*/
 
-
-                    if (flag[0] == 1) {
-                        holder.star.setImageResource(R.drawable.favourite_yes);
-                        Toast.makeText(getActivity(), "ALreaady exist", Toast.LENGTH_LONG).show();
-                // Partially working:(3
+                    if (flag[0] == 1) {flag[0]=0;
+                        holder.star.setImageResource(R.drawable.favourite_no);
+                        databaseHelper.deleteData(itrack.getTrack().getTrackName());
+                        Toast.makeText(getActivity(), "Removed from faavourites", Toast.LENGTH_LONG).show();
+                        // Partially working:(3
                       /*    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                         dialog.setMessage("Already exist");
                         dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -222,8 +229,8 @@ public class FragmentA extends android.support.v4.app.Fragment {
                           dialog.show();*/
 
                     } else {
-                        store(position);
-                        Log.d("Checking Position", String.valueOf(position));
+                        //store(position);
+                        Toast.makeText(getActivity(),"Added to favourites",Toast.LENGTH_SHORT).show();
                         databaseHelper.addTrackData(tracklist.getTrack().getTrackName(), tracklist.getTrack().getArtistName(), yearRelease[0]);
 
                     }
@@ -235,12 +242,12 @@ public class FragmentA extends android.support.v4.app.Fragment {
         }
     }
 
-    public void store(int position) {
+  /*  public void store(int position) {
         StringBuilder str = new StringBuilder();
 
 
         str.append(getposition());
-        /*    if (flag == 1) {
+            if (flag == 1) {
          String string = str.toString();
            char a[] = string.toCharArray();
              for (int i = 0; i < a.length; i++)
@@ -250,7 +257,7 @@ public class FragmentA extends android.support.v4.app.Fragment {
         Log.d("Checking string",string);
           str.append(string);
             Log.d("Checking yra", String.valueOf(str));
- }*/
+ }
         str.append(position + ",");
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Save Track", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -262,7 +269,7 @@ public class FragmentA extends android.support.v4.app.Fragment {
     public String getposition() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Save Track", Context.MODE_PRIVATE);
         return sharedPreferences.getString("PositionTrack", "");
-    }
+    }*/
 }
 
 

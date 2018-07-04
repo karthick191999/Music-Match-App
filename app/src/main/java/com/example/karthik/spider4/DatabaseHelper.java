@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 /**
@@ -26,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String create = "CREATE TABLE " + table_name + " ( " + Col1 + " INTEGER PRIMARY KEY AUTOINCREMENT," + Col2 + " TEXT," + Col3 + " TEXT, " + Col4 + " TEXT );";
+        String create = "CREATE TABLE " + table_name + " ( " + Col1 + " INTEGER PRIMARY KEY AUTOINCREMENT," + Col2 + " VARCHAR(255)," + Col3 + " TEXT, " + Col4 + " TEXT );";
         db.execSQL(create);
     }
 
@@ -48,6 +50,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + table_name + "", null);
         return cursor;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public boolean staring(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+      Cursor b =   db.rawQuery("Select * from "+table_name+" where " + Col2 + "= ? ", new String[]{name},null);
+   if (b.getCount()!=0)
+       return true;
+        else
+            return false;
     }
 
     public void deleteData(String name) {

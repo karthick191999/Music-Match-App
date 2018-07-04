@@ -3,10 +3,12 @@ package com.example.karthik.spider4;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +94,7 @@ public class FragmentB extends Fragment {
 
         private boolean[] fav = new boolean[15];
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @NonNull
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -117,8 +120,12 @@ public class FragmentB extends Fragment {
             } else {
                 holder.star.setImageResource(R.drawable.favourite_no);
             }
+            if (databaseArtist.staring(artistList.getArtist().getArtistName())) {
+                holder.star.setImageResource(R.drawable.favourite_yes);
+                fav[position] = true;
+            }
 
-            String pos = getposition();
+         /*   final String pos = getposition();
             //  Log.d("SHARED", pos);
             StringTokenizer savePosition = new StringTokenizer(pos, ",");
             for (int i = 0; i < pos.length(); i++) {
@@ -128,10 +135,12 @@ public class FragmentB extends Fragment {
                         fav[position] = true;
                     }
                 }
-            }
+            }*/
 
 
             holder.star.setOnClickListener(new View.OnClickListener() {
+                ArtistList iartist = getItem(position);
+
                 @Override
                 public void onClick(View v) {
                     if (fav[position]) {
@@ -142,8 +151,10 @@ public class FragmentB extends Fragment {
 
                         fav[position] = true;
                     }
-
-                    String pos = getposition();
+                    if (databaseArtist.staring(iartist.getArtist().getArtistName())) {
+                        flag[0] = 1;
+                    }
+                  /* String pos = getposition();
 
                     StringTokenizer savePosition = new StringTokenizer(pos, ",");
                     for (int i = 0; i < pos.length(); i++) {
@@ -154,7 +165,7 @@ public class FragmentB extends Fragment {
                                 break;
                             }
                         }
-                    }
+                    }*/
                     StringBuilder genre = new StringBuilder();
                     List<MusicGenreList> list = artistList.getArtist().getPrimaryGenres().getMusicGenreList();
 
@@ -169,8 +180,10 @@ public class FragmentB extends Fragment {
                         genre.append("Genre unavailable");
                     }
                     if (flag[0] == 1) {
-                        holder.star.setImageResource(R.drawable.favourite_yes);
-                        Toast.makeText(getActivity(), "ALready exist", Toast.LENGTH_LONG).show();
+                        databaseArtist.deleteData(iartist.getArtist().getArtistName());
+                        flag[0] = 0;
+                        holder.star.setImageResource(R.drawable.favourite_no);
+                        Toast.makeText(getActivity(), "Removed from favourites", Toast.LENGTH_LONG).show();
                         //The same problem as the previous fragment:(
                         /*  AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                         dialog.setMessage("Already exist");
@@ -190,10 +203,10 @@ public class FragmentB extends Fragment {
                         });
                           dialog.show();*/
 
-                    }
-                    else {
+                    } else {
+                        Toast.makeText(getActivity(), "Added to favourites", Toast.LENGTH_SHORT).show();
                         databaseArtist.addData(artistList.getArtist().getArtistName(), String.valueOf(artistList.getArtist().getArtistRating()), genre.toString());
-                        store(position);
+                        //store(position);
 
                     }
                 }
@@ -206,12 +219,12 @@ public class FragmentB extends Fragment {
         }
     }
 
-    public void store(int position) {
+   /* public void store(int position) {
         StringBuilder str = new StringBuilder();
 
 
         str.append(getposition());
-        /*    if (flag == 1) {
+            if (flag == 1) {
          String string = str.toString();
            char a[] = string.toCharArray();
              for (int i = 0; i < a.length; i++)
@@ -222,7 +235,7 @@ public class FragmentB extends Fragment {
           str.append(string);
             Log.d("Checking yra", String.valueOf(str));
 
-         }*/
+         }
         str.append(position + ",");
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Save file", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -234,7 +247,7 @@ public class FragmentB extends Fragment {
     public String getposition() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Save file", Context.MODE_PRIVATE);
         return sharedPreferences.getString("Position", "");
-    }
+    }*/
 
 
 }
