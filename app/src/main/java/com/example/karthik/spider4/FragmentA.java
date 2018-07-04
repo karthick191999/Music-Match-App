@@ -202,7 +202,7 @@ public class FragmentA extends android.support.v4.app.Fragment {
                     if (flag[0] == 1) {
                         holder.star.setImageResource(R.drawable.favourite_yes);
                         Toast.makeText(getActivity(), "ALreaady exist", Toast.LENGTH_LONG).show();
-                // Partially working:(
+                // Partially working:(3
                       /*    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                         dialog.setMessage("Already exist");
                         dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {

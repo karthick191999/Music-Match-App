@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SearchActivity extends AppCompatActivity {
     String BASE_URL = "http://api.musixmatch.com/ws/1.1/";
     String API_KEY = "28ba11b5b9e792712fa5b640c26d6398";
-    ListView searchList;
+    ListView searchList, searchArtist, searchLyric;
     TextView textView;
 
     @Override
@@ -46,6 +47,8 @@ public class SearchActivity extends AppCompatActivity {
         String name = bundle.getString("Searchtext");
         textView = (TextView) findViewById(R.id.searchtext);
         searchList = (ListView) findViewById(R.id.searchList);
+        searchLyric = (ListView) findViewById(R.id.searchLyric);
+        searchArtist = (ListView) findViewById(R.id.searchArtist);
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         APIinterface apIinterface = retrofit.create(APIinterface.class);
 
@@ -67,46 +70,184 @@ public class SearchActivity extends AppCompatActivity {
         });
         }*/
         //if (bundle.getBoolean("Check")) {
-            Call<TrackListResponse> call = apIinterface.getTrack(API_KEY, name, 30, 1, "desc");
-            call.enqueue(new Callback<TrackListResponse>() {
-                @Override
-                public void onResponse(Call<TrackListResponse> call, Response<TrackListResponse> response) {
-                    TrackListResponse trackListResponse = response.body();
+        Call<TrackListResponse> call = apIinterface.getTrack(API_KEY, name, 30, 1, "desc");
+        call.enqueue(new Callback<TrackListResponse>() {
+            @Override
+            public void onResponse(Call<TrackListResponse> call, Response<TrackListResponse> response) {
+                TrackListResponse trackListResponse = response.body();
 
-                    List<Tracklist> trackLists = trackListResponse.getMessage().getBody().getTrackList();
-                    if (String.valueOf(trackLists)=="[]")
-                        Toast.makeText(SearchActivity.this,"No such element:(",Toast.LENGTH_LONG).show();
-                    else
-                    {  searchAdapter adapter = new searchAdapter(SearchActivity.this, R.layout.search_single_row, trackLists);
-                    searchList.setAdapter(adapter);}
+                List<Tracklist> trackLists = trackListResponse.getMessage().getBody().getTrackList();
+                if (String.valueOf(trackLists) == "[]")
+                    Toast.makeText(SearchActivity.this, "No such element:(", Toast.LENGTH_LONG).show();
+                else {
+                    searchAdapter adapter = new searchAdapter(SearchActivity.this, R.layout.search_single_row, trackLists);
+                    searchList.setAdapter(adapter);
                 }
+            }
 
-                @Override
-                public void onFailure(Call<TrackListResponse> call, Throwable t) {
-                    Toast.makeText(SearchActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            @Override
+            public void onFailure(Call<TrackListResponse> call, Throwable t) {
+                Toast.makeText(SearchActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
 
+            }
+        });
+
+
+        Call<TrackListResponse> callArtist = apIinterface.getSearchArtistr(API_KEY, name, 30, 1, "desc");
+        callArtist.enqueue(new Callback<TrackListResponse>() {
+            @Override
+            public void onResponse(Call<TrackListResponse> call, Response<TrackListResponse> response) {
+                TrackListResponse trackListResponse = response.body();
+
+                List<Tracklist> trackLists = trackListResponse.getMessage().getBody().getTrackList();
+                if (String.valueOf(trackLists) == "[]")
+                    Toast.makeText(SearchActivity.this, "No such element:(", Toast.LENGTH_LONG).show();
+                else {
+                    searchAdapter adapter = new searchAdapter(SearchActivity.this, R.layout.search_single_row, trackLists);
+                    searchArtist.setAdapter(adapter);
                 }
-            });
+            }
 
-        searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onFailure(Call<TrackListResponse> call, Throwable t) {
+                Toast.makeText(SearchActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        Call<TrackListResponse> callLyric = apIinterface.getSearchLyric(API_KEY, name, 30, 1, "desc");
+        callLyric.enqueue(new Callback<TrackListResponse>() {
+            @Override
+            public void onResponse(Call<TrackListResponse> call, Response<TrackListResponse> response) {
+                TrackListResponse trackListResponse = response.body();
+
+                List<Tracklist> trackLists = trackListResponse.getMessage().getBody().getTrackList();
+                if (String.valueOf(trackLists) == "[]")
+                    Toast.makeText(SearchActivity.this, "No such element:(", Toast.LENGTH_LONG).show();
+                else {
+                    searchAdapter adapter = new searchAdapter(SearchActivity.this, R.layout.search_single_row, trackLists);
+                    searchLyric.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TrackListResponse> call, Throwable t) {
+                Toast.makeText(SearchActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        searchLyric.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent searchIntent = new Intent(SearchActivity.this,TrackDetails.class);
+                Intent searchIntent = new Intent(SearchActivity.this, TrackDetails.class);
                 Bundle bundle = new Bundle();
-               Tracklist tracklist  = (Tracklist) searchList.getItemAtPosition(position);
+                Tracklist tracklist = (Tracklist) searchLyric.getItemAtPosition(position);
                 int albumId = tracklist.getTrack().getAlbumId();
                 bundle.putInt("TrackId", tracklist.getTrack().getTrackId());
                 bundle.putInt("Id", albumId);
                 bundle.putInt("Position", position);
-                searchIntent  .putExtras(bundle);
+                searchIntent.putExtras(bundle);
                 startActivity(searchIntent);
             }
         });
 
 
+        searchArtist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent searchIntent = new Intent(SearchActivity.this, TrackDetails.class);
+                Bundle bundle = new Bundle();
+                Tracklist tracklist = (Tracklist) searchArtist.getItemAtPosition(position);
+                int albumId = tracklist.getTrack().getAlbumId();
+                bundle.putInt("TrackId", tracklist.getTrack().getTrackId());
+                bundle.putInt("Id", albumId);
+                bundle.putInt("Position", position);
+                searchIntent.putExtras(bundle);
+                startActivity(searchIntent);
+            }
+        });
 
 
-        }
+        searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent searchIntent = new Intent(SearchActivity.this, TrackDetails.class);
+                Bundle bundle = new Bundle();
+                Tracklist tracklist = (Tracklist) searchList.getItemAtPosition(position);
+                int albumId = tracklist.getTrack().getAlbumId();
+                bundle.putInt("TrackId", tracklist.getTrack().getTrackId());
+                bundle.putInt("Id", albumId);
+                bundle.putInt("Position", position);
+                searchIntent.putExtras(bundle);
+                startActivity(searchIntent);
+            }
+        });
+        searchList.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+        searchArtist.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+        searchLyric.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+
+    }
     //}
 
     class searchAdapter extends ArrayAdapter<Tracklist> {
