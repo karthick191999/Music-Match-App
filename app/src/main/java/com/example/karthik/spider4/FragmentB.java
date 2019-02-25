@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,8 @@ public class FragmentB extends Fragment {
             final ViewArtist holder;
             final int[] flag = {0};
             final ArtistList artistList = getItem(position);
+            Log.i("Position ", Integer.toString(position));
+            Log.i("Artist List", artistList.getArtist().getArtistName() + " haha");
             if (row == null) {
                 holder = new ViewArtist();
                 LayoutInflater layoutInflater = getActivity().getLayoutInflater();
@@ -125,24 +128,14 @@ public class FragmentB extends Fragment {
                 fav[position] = true;
             }
 
-         /*   final String pos = getposition();
-            //  Log.d("SHARED", pos);
-            StringTokenizer savePosition = new StringTokenizer(pos, ",");
-            for (int i = 0; i < pos.length(); i++) {
-                while (savePosition.hasMoreTokens()) {
-                    if (position == Integer.parseInt(savePosition.nextToken())) {
-                        holder.star.setImageResource(R.drawable.favourite_yes);
-                        fav[position] = true;
-                    }
-                }
-            }*/
-
-
             holder.star.setOnClickListener(new View.OnClickListener() {
                 ArtistList iartist = getItem(position);
 
                 @Override
                 public void onClick(View v) {
+                    Log.i("Artist", iartist.getArtist().getPrimaryGenres() + "XXX");
+
+
                     if (fav[position]) {
                         holder.star.setImageResource(R.drawable.favourite_no);
                         fav[position] = false;
@@ -154,29 +147,29 @@ public class FragmentB extends Fragment {
                     if (databaseArtist.staring(iartist.getArtist().getArtistName())) {
                         flag[0] = 1;
                     }
-                  /* String pos = getposition();
 
-                    StringTokenizer savePosition = new StringTokenizer(pos, ",");
-                    for (int i = 0; i < pos.length(); i++) {
-                        while (savePosition.hasMoreTokens()) {
-
-                            if (position == Integer.parseInt(savePosition.nextToken())) {
-                                flag[0] = 1;
-                                break;
-                            }
-                        }
-                    }*/
                     StringBuilder genre = new StringBuilder();
-                    List<MusicGenreList> list = artistList.getArtist().getPrimaryGenres().getMusicGenreList();
 
-                    for (int i = 0; i < list.size(); i++) {
+                    boolean primaryGenre = true;
+                    if (iartist.getArtist().getPrimaryGenres() == null) {
+                        Toast.makeText(FragmentB.this.getContext(), "API not Working properly :( unfortunately", Toast.LENGTH_LONG).show();
+                        primaryGenre = false;
+
+                    }
+
+                    List<MusicGenreList> list = null;
+                    if (iartist.getArtist().getPrimaryGenres() != null) {
+                        list = iartist.getArtist().getPrimaryGenres().getMusicGenreList();
+                    }
+
+                    for (int i = 0;primaryGenre && i < list.size(); i++) {
                         if (i == list.size() - 1)
                             genre.append(list.get(i).getMusicGenre().getMusicGenreName());
                         else
                             genre.append(list.get(i).getMusicGenre().getMusicGenreName() + ",");
 
                     }
-                    if (list.size() <= 0) {
+                    if (primaryGenre == false || list.size() <= 0) {
                         genre.append("Genre unavailable");
                     }
                     if (flag[0] == 1) {
@@ -209,6 +202,8 @@ public class FragmentB extends Fragment {
                         //store(position);
 
                     }
+
+
                 }
             });
 
