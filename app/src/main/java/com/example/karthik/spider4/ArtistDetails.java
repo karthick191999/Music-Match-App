@@ -41,20 +41,28 @@ public class ArtistDetails extends AppCompatActivity {
                 StringBuilder genre = new StringBuilder();
                 String name = response.body().getMessage().getBody().getArtist().getArtistName();
                 int rating = response.body().getMessage().getBody().getArtist().getArtistRating();
-                aname.setText( name);
+                aname.setText(name);
                 arating.setText(String.valueOf(rating));
-                List<MusicGenreList> list = response.body().getMessage().getBody().getArtist().getPrimaryGenres().getMusicGenreList();
-                for (int i = 0; i < list.size(); i++) {
-                    if (i == list.size() - 1)
-                        genre.append(list.get(i).getMusicGenre().getMusicGenreName());
-                    else
-                        genre.append(list.get(i).getMusicGenre().getMusicGenreName() + ",");
-
+                boolean primaryGenre = true;
+                if (response.body().getMessage().getBody().getArtist().getPrimaryGenres() == null) {
+                    primaryGenre = false;
                 }
-                if (list.size() <= 0) {
+                List<MusicGenreList> list = null;
+                if (primaryGenre) {
+
+                    list = response.body().getMessage().getBody().getArtist().getPrimaryGenres().getMusicGenreList();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (i == list.size() - 1)
+                            genre.append(list.get(i).getMusicGenre().getMusicGenreName());
+                        else
+                            genre.append(list.get(i).getMusicGenre().getMusicGenreName() + ",");
+
+                    }
+                }
+                if (primaryGenre==false||list.size() <= 0) {
                     agenre.setText("Genre Unavailable");
                 } else
-                    agenre.setText( genre);
+                    agenre.setText(genre);
             }
 
             @Override
